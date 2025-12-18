@@ -1,15 +1,54 @@
+# Dependencies
 node_modules
-LICENSE
+
+# Build output (use fresh build in Docker)
+build
+dist
+
+# Test and coverage
+coverage
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx
+
+# Git
+.git
+.gitignore
+
+# IDE and editors
+.idea
+.vs
+.vscode
+*.swp
+*.swo
+
+# Docker files (not needed inside container)
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
 README.md
-**/.dockerignore
-**/.env*
-**/.git
-**/.gitignore
-**/.vs
-**/.vscode
-**/.idea
-**/docker-compose*
-**/Dockerfile*
-**/npm-debug.log
-**/secrets.dev.yaml
-**/values.dev.yaml
+LICENSE
+CLAUDE.md
+docs
+
+# CI/CD
+.github
+
+# Environment files (secrets - build arg used instead)
+.env*
+*.env
+
+# Logs and debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Misc
+.DS_Store
+Thumbs.db
+*.log
+secrets.dev.yaml
+values.dev.yaml
