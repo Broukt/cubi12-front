@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: ./Dockerfile
+      args:
+        backend_url: ${REACT_APP_API_URL}
     restart: always
     ports:
-      - '3000:3000'
+      - '3000:80'
