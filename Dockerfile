@@ -1,37 +1,41 @@
-# Use the official Node.js runtime as the base image
-FROM node:18 as build
+# Stage 1: Build environment
+FROM node:18-alpine AS build
 
-# We declare the backend_url argument for building, for setting the backend server location
+# Declare build argument for backend URL
 ARG backend_url
 
-# Set the backend URL as an enviroment variable for the build process
-ENV REACT_APP_API_URL $backend_url
+# Set environment variable for React build
+ENV REACT_APP_API_URL=$backend_url
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
+# Copy package files first (better layer caching)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Use npm ci for faster, reproducible builds in CI/CD
+RUN npm ci --silent
 
-# Copy the entire application code to the container
+# Copy source code
 COPY . .
 
 # Build the React app for production
 RUN npm run build
 
-# Use Nginx as the production server
+# Stage 2: Production environment
 FROM nginx:alpine
 
-# Copy the built React app to Nginx's web server directory
-COPY ./nginx.conf /etc/nginx/conf.d/
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built assets from build stage
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 80 for the Nginx server
+# Add health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
+
+# Expose port 80
 EXPOSE 80
 
-# Start Nginx when the container runs
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
