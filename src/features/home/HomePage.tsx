@@ -24,7 +24,7 @@ const HomePage = () => {
       style={{ height: "100%", marginTop: "4rem", textAlign: "center" }}
     >
       <Typography variant="h3" component="h1" style={{ marginBottom: "2rem" }}>
-        ¡Bienvenido a Cubi12!
+        ¡Bienvenido a la mejor página jamás creada!
       </Typography>
       <img
         alt="Cubi12Logo"
